@@ -13,36 +13,44 @@ using UnityEngine;
 
 public class GoalManager : MonoBehaviour
 {
-    [SerializeField] private float goalTime; // time (in seconds) the current goal is active
-    [SerializeField] private float baseGoalScoreTarget; // score goal of first goal - each goal target is 2^n * this value
+    [SerializeField] private float baseGoalScoreTarget; // score goal of first goal - each goal target is 2^n-1 * this value
 
-    public int CurrentGoalScoreTarget { get; private set; } // score needed to complete the goal
-    public int CurrentGoalNumber { get; private set; } // what number goal is this in gameplay? (first, second, etc)
-    public int CurrentGoalScore { get; private set; } // current score earned toward this goal
-
+    public static int CurrentGoalScoreTarget { get; private set; } = 0; // score needed to complete the goal
+    public static int CurrentGoalNumber { get; private set; } = 0; // what number goal is this in gameplay? (first, second, etc)
+    public static int CurrentGoalScore { get; private set; } = 0; // current score earned toward this goal
+    public static float GoalTime { get; private set; } = 30; // time (in seconds) the current goal is active
+    public static float GoalTimeRemaining { get; private set; } = 0; // how much time (seconds) is left for the current goal
+    
     public delegate void OnGoalChangedHandler(int newGoalNumber, int newGoalScoreTarget);
     public static OnGoalChangedHandler OnGoalChanged;
 
-    private float _goalTimeRemaining; // how much time is left for the current goal
     private Coroutine _countdownRoutine; // holds the current countdown routine
     void Start()
     {
         ScoreManager.OnScoreChanged += UpdateCurrentGoalScore;
+        
+        StartNextGoal();
     }
 
     // starts the next goal
     public void StartNextGoal()
     {
+        // reset current score and update goal number
         CurrentGoalScore = 0;
         CurrentGoalNumber++;
-        int newGoalTargetScore = Mathf.RoundToInt(Mathf.Pow(2, CurrentGoalNumber) * baseGoalScoreTarget);
-        SetGoal(newGoalTargetScore);
-        _countdownRoutine = StartCoroutine(GoalTimeCountdown(goalTime));
-    }
-    // starts a current goal at a specified target value
-    public void SetGoal(int goalTarget)
-    {
-        CurrentGoalScoreTarget = goalTarget;
+        Debug.Log("Goal #" + CurrentGoalNumber + " started!");
+        
+        // update target score for new goal
+        int newGoalTargetScore = Mathf.RoundToInt(Mathf.Pow(2, CurrentGoalNumber - 1) * baseGoalScoreTarget);
+        CurrentGoalScoreTarget = newGoalTargetScore;
+        Debug.Log("New Goal Target: " + CurrentGoalScoreTarget);
+        
+        // restart countdown
+        if (_countdownRoutine != null) StopCoroutine(_countdownRoutine);
+        _countdownRoutine = StartCoroutine(GoalTimeCountdown(GoalTime));
+        
+        // fire goal changed delegate
+        OnGoalChanged?.Invoke(CurrentGoalNumber, CurrentGoalScoreTarget);
     }
     
     // update score earned toward this goal
@@ -66,12 +74,12 @@ public class GoalManager : MonoBehaviour
     // routine to decrement goal timer
     private IEnumerator GoalTimeCountdown(float countdownGoalTime)
     {
-        _goalTimeRemaining = countdownGoalTime;
+        GoalTimeRemaining = countdownGoalTime;
 
         // decrement timer each frame
-        while (_goalTimeRemaining > 0)
+        while (GoalTimeRemaining > 0)
         {
-            _goalTimeRemaining -= Time.deltaTime;
+            GoalTimeRemaining -= Time.deltaTime;
             yield return null;
         }
         

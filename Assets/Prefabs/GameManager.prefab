@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4512200426900435118}
   - component: {fileID: 7427031478015492299}
   - component: {fileID: 1718792799297238590}
+  - component: {fileID: 2596686529118375923}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -48,6 +49,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ballPrefab: {fileID: 4041718113496919110, guid: 16123939bd0cb2e4193a006c06a08efd, type: 3}
   defaultBallSpeed: 3
+  defaultMoneyGainedOnBounce: 0.1
+  speedIncreasePercentage: 0.2
+  moneyGainedIncreasePerPurchase: 0.05
 --- !u!114 &7427031478015492299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,5 +76,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faf686e609e78cb4a8e039d51ab99ee7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goalTime: 20
   baseGoalScoreTarget: 10
+--- !u!114 &2596686529118375923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2649773280541533553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d3ba6d16be0b62429d740b8f965a816, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -16,12 +16,16 @@ public class Ball : MonoBehaviour
         get { return _speed; }
         set { _speed = value; }
     }
+    public float MoneyGainedOnBounce
+    {
+        get { return _moneyGainedOnBounce; }
+        set { _moneyGainedOnBounce = value; }
+    }
 
-    [Header("Gameplay Values")]
     private float _speed;
     private int _pointsGainedOnBounce = 1;
+    private float _moneyGainedOnBounce = 0.1f;
     
-    [Space, Header("Collision Values")]
     private LayerMask _collisionMask;
     
     private Rigidbody2D _rb;
@@ -52,5 +56,16 @@ public class Ball : MonoBehaviour
             ScoreManager.AddToScore(_pointsGainedOnBounce);
         }*/
         ScoreManager.AddToScore(_pointsGainedOnBounce);
+        MoneyManager.AddToMoney(_moneyGainedOnBounce);
+    }
+
+    public void UpdateSpeed(float newSpeed)
+    {
+        _rb.velocity = _rb.velocity.normalized * newSpeed;
+    }
+    
+    public void UpdateMoneyGainedOnBounce(float newAmountGainedOnBounce)
+    {
+        _moneyGainedOnBounce = newAmountGainedOnBounce;
     }
 }
