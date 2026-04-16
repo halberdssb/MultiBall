@@ -49,7 +49,7 @@ public class ShopButton : MonoBehaviour
     // increments number of times purchased and updates price accordingly
     private void UpdateCurrentCost()
     {
-        _currentCost = Mathf.Pow(2, _numTimesPurchased) * startingCost; 
+        _currentCost = (_numTimesPurchased + 1) * startingCost; 
     }
     
     // updates price text

@@ -38,7 +38,7 @@ public class Ball : MonoBehaviour
         float randomYSign = GetRandomSign();
         Vector3 startVelocity = new Vector3(randomXSign, randomYSign, 0).normalized * _speed;
         
-        _rb.velocity = startVelocity;
+        _rb.linearVelocity = startVelocity;
     }
     
     // returns either 1 or -1 randomly
@@ -61,7 +61,7 @@ public class Ball : MonoBehaviour
 
     public void UpdateSpeed(float newSpeed)
     {
-        _rb.velocity = _rb.velocity.normalized * newSpeed;
+        _rb.linearVelocity = _rb.linearVelocity.normalized * newSpeed;
     }
     
     public void UpdateMoneyGainedOnBounce(float newAmountGainedOnBounce)

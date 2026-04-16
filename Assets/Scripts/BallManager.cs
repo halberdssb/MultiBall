@@ -73,8 +73,11 @@ public class BallManager : MonoBehaviour
     {
         CurrentBallSpeed = defaultBallSpeed;
         CurrentMoneyGainedOnBounce = defaultMoneyGainedOnBounce;
-        // spawn one ball at start
-        SpawnBall();
+    }
+
+    private void Start()
+    {
+        GameStateManager.OnGameStarted += SpawnBall;
     }
     
     public void SpawnBall()

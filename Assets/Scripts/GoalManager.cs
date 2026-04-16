@@ -24,12 +24,15 @@ public class GoalManager : MonoBehaviour
     public delegate void OnGoalChangedHandler(int newGoalNumber, int newGoalScoreTarget);
     public static OnGoalChangedHandler OnGoalChanged;
 
+    public delegate void OnGoalFailedHandler();
+    public static OnGoalFailedHandler OnGoalFailed;
+
     private Coroutine _countdownRoutine; // holds the current countdown routine
     void Start()
     {
         ScoreManager.OnScoreChanged += UpdateCurrentGoalScore;
-        
-        StartNextGoal();
+
+        GameStateManager.OnGameStarted += StartNextGoal;
     }
 
     // starts the next goal
@@ -84,6 +87,7 @@ public class GoalManager : MonoBehaviour
         }
         
         // if timer reaches 0 or below, goal is failed - lose game
+        OnGoalFailed?.Invoke();
         Debug.Log("Goal Failed - Game Lost!");
     }
 }
