@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /*
  * Handles ball spawning and ball values in game
@@ -17,6 +18,8 @@ public class BallManager : MonoBehaviour
     [SerializeField] private float defaultMoneyGainedOnBounce = 0.1f;
     [SerializeField] private float speedIncreasePercentage = 0.2f; // percentage of default speed will be increased by with each upgrade
     [SerializeField] private float moneyGainedIncreasePerPurchase = .05f; // amount of money added to bounce each purchase
+
+    private List<Ball> balls = new List<Ball>();
 
     public int CurrentNumBalls
     {
@@ -78,6 +81,8 @@ public class BallManager : MonoBehaviour
     private void Start()
     {
         GameStateManager.OnGameStarted += SpawnBall;
+        GameStateManager.OnGameEnded += DestroyAllBalls;
+        GameStateManager.OnGameEnded += ResetBallData;
     }
     
     public void SpawnBall()
@@ -87,8 +92,8 @@ public class BallManager : MonoBehaviour
 
     public void SpawnBall(Vector3 spawnPos, float spawnSpeed, float spawnMoneyGainedOnBounce)
     {
-        ballPrefab = Instantiate(ballPrefab, spawnPos, Quaternion.identity);
-        Ball spawnedBall = ballPrefab.GetComponent<Ball>();
+        GameObject ballObject = Instantiate(ballPrefab, spawnPos, Quaternion.identity);
+        Ball spawnedBall = ballObject.GetComponent<Ball>();
         
         spawnedBall.Speed = spawnSpeed;
         spawnedBall.MoneyGainedOnBounce = spawnMoneyGainedOnBounce;
@@ -97,6 +102,8 @@ public class BallManager : MonoBehaviour
         OnMoneyGainedOnBounceChanged += spawnedBall.UpdateMoneyGainedOnBounce;
 
         CurrentNumBalls++;
+
+        balls.Add(spawnedBall);
     }
 
     public void IncreaseBallSpeed()
@@ -107,5 +114,24 @@ public class BallManager : MonoBehaviour
     public void IncreaseMoneyGainedPerBounce()
     {
         CurrentMoneyGainedOnBounce += moneyGainedIncreasePerPurchase;
+    }
+
+    public void DestroyAllBalls()
+    {
+        for (int i = 0; i < balls.Count; i++)
+        {
+            OnBallSpeedChanged -= balls[i].UpdateSpeed;
+            OnMoneyGainedOnBounceChanged -= balls[i].UpdateMoneyGainedOnBounce;
+            Destroy(balls[i].gameObject);
+        }
+        
+        balls.Clear();
+    }
+
+    public void ResetBallData()
+    {
+        CurrentNumBalls = 0;
+        CurrentBallSpeed = defaultBallSpeed;
+        CurrentMoneyGainedOnBounce = defaultMoneyGainedOnBounce;
     }
 }

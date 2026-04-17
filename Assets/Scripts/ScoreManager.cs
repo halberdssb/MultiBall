@@ -17,7 +17,7 @@ public class ScoreManager : MonoBehaviour
     
     void Start()
     {
-        
+        GameStateManager.OnGameStarted += ResetScore;
     }
 
     // changes score by a given amount
@@ -25,5 +25,11 @@ public class ScoreManager : MonoBehaviour
     {
         Score += changeAmount;
         OnScoreChanged?.Invoke(changeAmount, Score);
+    }
+
+    public void ResetScore()
+    {
+        Score = 0;
+        OnScoreChanged?.Invoke(0, Score);
     }
 }

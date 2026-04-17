@@ -9,9 +9,19 @@ public class MoneyManager : MonoBehaviour
     public delegate void OnMoneyChangedHandler(float amountAdded, float newTotal);
     public static OnMoneyChangedHandler OnMoneyChanged;
 
+    private void Start()
+    {
+        GameStateManager.OnGameStarted += ResetMoney;
+    }
     public static void AddToMoney(float amountToAdd)
     {
         TotalMoney += amountToAdd;
         OnMoneyChanged?.Invoke(amountToAdd, TotalMoney);
+    }
+
+    public static void ResetMoney()
+    {
+        TotalMoney = 0;
+        OnMoneyChanged?.Invoke(0, TotalMoney);
     }
 }

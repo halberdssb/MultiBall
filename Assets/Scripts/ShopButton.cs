@@ -17,6 +17,8 @@ public class ShopButton : MonoBehaviour
 
     private void Awake()
     {
+        GameStateManager.OnGameStarted += ResetCost;
+        
         // set initial cost
         UpdateCurrentCost();
         UpdatePriceText();
@@ -56,5 +58,12 @@ public class ShopButton : MonoBehaviour
     private void UpdatePriceText()
     {
         priceText.text = "$" + _currentCost.ToString("F2");
+    }
+
+    private void ResetCost()
+    {
+        _numTimesPurchased = 0;
+        UpdateCurrentCost();
+        UpdatePriceText();
     }
 }

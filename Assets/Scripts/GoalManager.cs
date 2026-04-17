@@ -33,6 +33,7 @@ public class GoalManager : MonoBehaviour
         ScoreManager.OnScoreChanged += UpdateCurrentGoalScore;
 
         GameStateManager.OnGameStarted += StartNextGoal;
+        GameStateManager.OnGameEnded += ResetGoalData;
     }
 
     // starts the next goal
@@ -89,5 +90,13 @@ public class GoalManager : MonoBehaviour
         // if timer reaches 0 or below, goal is failed - lose game
         OnGoalFailed?.Invoke();
         Debug.Log("Goal Failed - Game Lost!");
+    }
+
+    public static void ResetGoalData()
+    {
+        CurrentGoalScoreTarget = 0;
+        CurrentGoalNumber = 0;
+        CurrentGoalScore = 0;
+        GoalTimeRemaining = 0;
     }
 }
