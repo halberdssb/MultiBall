@@ -45,7 +45,8 @@ public class GoalManager : MonoBehaviour
         Debug.Log("Goal #" + CurrentGoalNumber + " started!");
         
         // update target score for new goal
-        int newGoalTargetScore = Mathf.RoundToInt(Mathf.Pow(2, CurrentGoalNumber - 1) * baseGoalScoreTarget);
+        // Use bit-shift to keep integers -GS
+        int newGoalTargetScore = (1 << (CurrentGoalNumber - 1)) * Mathf.RoundToInt(baseGoalScoreTarget);
         CurrentGoalScoreTarget = newGoalTargetScore;
         Debug.Log("New Goal Target: " + CurrentGoalScoreTarget);
         

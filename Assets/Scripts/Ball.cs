@@ -44,7 +44,8 @@ public class Ball : MonoBehaviour
     // returns either 1 or -1 randomly
     private float GetRandomSign()
     {
-        return Mathf.Sign((Random.value - 0.5f) * 2);
+        // Eliminate potential 0 -GS
+        return Random.value < 0.5f ? -1f : 1f;
     }
     
     // handles updating points when collisions occur
